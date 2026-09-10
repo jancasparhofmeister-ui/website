@@ -1,0 +1,864 @@
+<title>Jan Caspar Hofmeister</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap">
+
+<style>
+  /* ============================================================
+     Jan Caspar Hofmeister
+     Helle, ruhige Seite. Eine Schrift, ein Akzent, viel Weissraum.
+     Alle Farben sind explizit gesetzt.
+     ============================================================ */
+
+  :root {
+    color-scheme: light;
+
+    --bg:      #FBFBFA;
+    --surface: #FFFFFF;
+    --raised:  #F4F5F5;
+
+    --ink:     #15181B;
+    --muted:   #59636A;
+    --faint:   #8C959B;
+
+    --line:    #E5E7E7;
+    --line-2:  #D2D6D7;
+
+    --accent:  #1F5C6B;
+    --accent-soft: rgba(31, 92, 107, .07);
+
+    --font: "Instrument Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+
+    --measure: 60ch;
+    --page: 68rem;
+
+    --mx: 50%;
+    --my: 30%;
+    --ease: cubic-bezier(.22,.61,.36,1);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font);
+    font-size: 16.5px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: rgba(31, 92, 107, .16); }
+
+  h1, h2, h3 { font-weight: 600; letter-spacing: -.018em; }
+
+  a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+    border-radius: 3px;
+  }
+
+  /* weicher Schein, folgt dem Mauszeiger */
+  .glow {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      36rem 36rem at var(--mx) var(--my),
+      rgba(31, 92, 107, .055),
+      rgba(31, 92, 107, .018) 40%,
+      transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+  .glow.on { opacity: 1; }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: var(--page);
+    margin: 0 auto;
+    padding: 0 clamp(1.25rem, 5vw, 4rem);
+  }
+
+  /* ============================================================
+     Kopf
+     ============================================================ */
+
+  .hero {
+    position: relative;
+    z-index: 1;
+    max-width: var(--page);
+    margin: 0 auto;
+    padding: clamp(3.5rem, 10vh, 7rem) clamp(1.25rem, 5vw, 4rem) clamp(3.5rem, 9vh, 6rem);
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+    gap: clamp(2rem, 6vw, 5rem);
+    align-items: center;
+    min-height: 82svh;
+  }
+
+  .hero-text { max-width: 30ch; }
+
+  .name {
+    font-size: clamp(2.9rem, 8vw, 5.4rem);
+    line-height: 1.02;
+    letter-spacing: -.035em;
+    margin: 0;
+    text-wrap: balance;
+    opacity: 0;
+    transform: translateY(14px);
+    animation: rise 1s var(--ease) .1s forwards;
+  }
+  .name span { display: block; }
+
+  .tagline {
+    margin: 1.6rem 0 0;
+    font-size: clamp(1.02rem, 1.9vw, 1.18rem);
+    line-height: 1.55;
+    color: var(--muted);
+    opacity: 0;
+    transform: translateY(14px);
+    animation: rise 1s var(--ease) .28s forwards;
+  }
+
+  .cue {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    margin-top: 2.4rem;
+    font-size: .92rem;
+    color: var(--muted);
+    opacity: 0;
+    transform: translateY(14px);
+    animation: rise 1s var(--ease) .44s forwards;
+    transition: color .25s ease;
+  }
+  .cue svg { transition: transform .3s var(--ease); }
+  .cue:hover { color: var(--accent); }
+  .cue:hover svg { transform: translateY(3px); }
+
+  @keyframes rise {
+    to { opacity: 1; transform: none; }
+  }
+
+  .hero-figure {
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+    background: var(--raised);
+    aspect-ratio: 4 / 5;
+    max-height: 34rem;
+    justify-self: end;
+    width: 100%;
+    opacity: 0;
+    animation: rise 1.2s var(--ease) .2s forwards;
+  }
+  .hero-figure img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 16%;
+    display: block;
+    transform: scale(1.06);
+    transition: transform 1.4s var(--ease);
+    will-change: transform;
+  }
+  .hero-figure:hover img { transform: scale(1.1); }
+
+  /* ============================================================
+     Abschnitte
+     ============================================================ */
+
+  section {
+    padding: clamp(3.25rem, 9vh, 5.5rem) 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2.4rem;
+  }
+  .section-head h2 {
+    font-size: clamp(1.35rem, 3vw, 1.75rem);
+    line-height: 1.2;
+    margin: 0;
+    white-space: nowrap;
+  }
+  .section-head .rule {
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    transition: transform 1s var(--ease) .12s;
+  }
+  .reveal.in .section-head .rule { transform: scaleX(1); }
+
+  .prose {
+    max-width: var(--measure);
+    color: var(--muted);
+    font-size: 1.02rem;
+  }
+  .prose p { margin: 0 0 1.15rem; }
+  .prose p:last-child { margin-bottom: 0; }
+
+  .lede {
+    max-width: 46ch;
+    font-size: clamp(1.12rem, 2.4vw, 1.4rem);
+    line-height: 1.5;
+    color: var(--ink);
+    letter-spacing: -.012em;
+    margin: 0 0 1.8rem;
+  }
+
+  /* ---------- Zeitleiste ---------- */
+
+  .ledger { display: grid; }
+
+  .entry {
+    display: grid;
+    grid-template-columns: 11rem 1fr;
+    gap: 0 2.5rem;
+    padding: 1.4rem 1rem 1.4rem 1.1rem;
+    border-top: 1px solid var(--line);
+    align-items: start;
+    position: relative;
+    transition: background .3s ease;
+  }
+  .entry:first-child { border-top: 0; }
+  .entry::before {
+    content: "";
+    position: absolute;
+    left: 0; top: -1px; bottom: 0;
+    width: 2px;
+    background: var(--accent);
+    transform: scaleY(0);
+    transform-origin: 50% 0;
+    transition: transform .4s var(--ease);
+  }
+  .entry:hover { background: var(--accent-soft); }
+  .entry:hover::before { transform: scaleY(1); }
+
+  .entry .when {
+    font-size: .88rem;
+    line-height: 1.6;
+    color: var(--faint);
+    font-variant-numeric: tabular-nums;
+    padding-top: .22rem;
+    transition: color .3s ease;
+  }
+  .entry:hover .when { color: var(--accent); }
+  .entry .what { min-width: 0; }
+  .entry h3 {
+    margin: 0;
+    font-size: 1.06rem;
+    font-weight: 600;
+  }
+  .entry .place {
+    color: var(--muted);
+    font-size: .94rem;
+    margin-top: .1rem;
+  }
+  .entry p {
+    margin: .5rem 0 0;
+    color: var(--muted);
+    font-size: .94rem;
+    max-width: var(--measure);
+  }
+
+  /* ---------- Bachelorarbeit ---------- */
+
+  .thesis {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: clamp(1.6rem, 4vw, 2.75rem);
+    display: grid;
+    gap: 1.3rem;
+  }
+  .thesis h3 {
+    font-size: clamp(1.2rem, 2.8vw, 1.6rem);
+    line-height: 1.32;
+    margin: 0;
+    max-width: 30ch;
+    text-wrap: balance;
+  }
+  .thesis p {
+    margin: 0;
+    max-width: var(--measure);
+    color: var(--muted);
+    font-size: .98rem;
+  }
+
+  /* ---------- Auszeichnungen ---------- */
+
+  .awards { display: grid; }
+  .award {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: .35rem 2rem;
+    align-items: baseline;
+    padding: 1.15rem 0;
+    border-top: 1px solid var(--line);
+  }
+  .award:first-child { border-top: 0; }
+  .award .title { font-size: 1.02rem; font-weight: 500; }
+  .award .issuer { font-size: .9rem; color: var(--faint); text-align: right; }
+
+  /* ---------- Sprachen ---------- */
+
+  .langs { display: grid; }
+  .lang {
+    display: grid;
+    grid-template-columns: 9rem minmax(0, 1fr) auto;
+    gap: .5rem 2rem;
+    align-items: center;
+    padding: 1.05rem 0;
+    border-top: 1px solid var(--line);
+  }
+  .lang:first-child { border-top: 0; }
+  .lang .tongue { font-weight: 500; font-size: 1.02rem; }
+  .lang .level { font-size: .94rem; color: var(--muted); }
+  .meter { display: flex; gap: 5px; }
+  .meter i {
+    display: block;
+    width: 2.4rem;
+    height: 4px;
+    background: var(--line-2);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    transition: transform .6s var(--ease);
+  }
+  .reveal.in .meter i { transform: scaleX(1); }
+  .meter i.on { background: var(--accent); }
+  .meter i:nth-child(1) { transition-delay: .05s; }
+  .meter i:nth-child(2) { transition-delay: .13s; }
+  .meter i:nth-child(3) { transition-delay: .21s; }
+  .meter i:nth-child(4) { transition-delay: .29s; }
+
+  /* ---------- Abseits des Schreibtischs ---------- */
+
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+    gap: clamp(1.75rem, 5vw, 4rem);
+    align-items: center;
+  }
+
+  .frame {
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+    background: var(--raised);
+    aspect-ratio: 4 / 5;
+    max-height: 30rem;
+  }
+  .frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 14%;
+    display: block;
+    transform: scale(1.06);
+    transition: transform 1.4s var(--ease);
+    will-change: transform;
+  }
+  .frame:hover img { transform: scale(1.1); }
+
+  /* ---------- Kontakt ---------- */
+
+  .contact { text-align: center; }
+  .contact .prose { margin: 0 auto 2rem; }
+  .mail {
+    display: inline-block;
+    font-size: clamp(1.25rem, 4.4vw, 2.4rem);
+    font-weight: 500;
+    letter-spacing: -.025em;
+    color: var(--ink);
+    word-break: break-word;
+    padding-bottom: .12em;
+    background-image: linear-gradient(90deg, var(--accent), var(--accent));
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 1.5px;
+    transition: background-size .5s var(--ease), color .3s ease, transform .3s var(--ease);
+    will-change: transform;
+  }
+  .mail:hover { color: var(--accent); background-size: 100% 1.5px; }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 1.6rem 0 3rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: .5rem 2rem;
+    font-size: .88rem;
+    color: var(--faint);
+  }
+
+  /* ---------- Einblenden ---------- */
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity .8s var(--ease), transform .8s var(--ease);
+  }
+  .reveal.in { opacity: 1; transform: none; }
+
+  .stagger > * {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity .65s var(--ease), transform .65s var(--ease);
+  }
+  .reveal.in .stagger > * { opacity: 1; transform: none; }
+  .reveal.in .stagger > *:nth-child(1) { transition-delay: .04s; }
+  .reveal.in .stagger > *:nth-child(2) { transition-delay: .11s; }
+  .reveal.in .stagger > *:nth-child(3) { transition-delay: .18s; }
+  .reveal.in .stagger > *:nth-child(4) { transition-delay: .25s; }
+  .reveal.in .stagger > *:nth-child(5) { transition-delay: .32s; }
+  .reveal.in .stagger > *:nth-child(6) { transition-delay: .39s; }
+
+  /* ---------- schmale Ansicht ---------- */
+
+  @media (max-width: 60rem) {
+    .hero {
+      grid-template-columns: 1fr;
+      min-height: 0;
+      gap: 2.5rem;
+    }
+    .hero-figure {
+      order: -1;
+      justify-self: start;
+      max-width: 20rem;
+      aspect-ratio: 1 / 1;
+    }
+    .hero-text { max-width: none; }
+    .split { grid-template-columns: 1fr; }
+    .frame { max-width: 22rem; aspect-ratio: 1 / 1; }
+  }
+
+  @media (max-width: 44rem) {
+    .entry { grid-template-columns: 1fr; gap: .35rem; }
+    .entry .when { padding-top: 0; }
+    .award { grid-template-columns: 1fr; }
+    .award .issuer { text-align: left; }
+    .lang { grid-template-columns: 1fr auto; row-gap: .35rem; }
+    .lang .level { grid-column: 1; }
+    .meter { grid-column: 2; grid-row: 1 / span 2; }
+    .meter i { width: 1.6rem; }
+  }
+
+  /* ---------- weniger Bewegung ---------- */
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .stagger > * { opacity: 1 !important; transform: none !important; transition: none !important; }
+    .name, .tagline, .cue, .hero-figure { opacity: 1 !important; animation: none !important; transform: none !important; }
+    .meter i, .section-head .rule { transform: none !important; }
+    .glow { display: none; }
+    * { transition-duration: .01ms !important; }
+  }
+
+  @media (hover: none) {
+    .glow { display: none; }
+  }
+</style>
+
+<div class="glow" id="glow" aria-hidden="true"></div>
+
+<header class="hero" id="top">
+  <div class="hero-text">
+    <h1 class="name"><span>Jan Caspar</span><span>Hofmeister</span></h1>
+    <p class="tagline">
+      Wirtschaftswissenschaftler aus Berlin, mit Schwerpunkt auf Controlling,
+      Finance und Recht.
+    </p>
+    <a class="cue" href="#profil">
+      Mehr über mich
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <path d="M7 1v12M2.5 8.5 7 13l4.5-4.5" stroke="currentColor" stroke-width="1.4"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </div>
+
+  <figure class="hero-figure">
+    <img src="@@PORTRAIT_A@@" alt="Porträt von Jan Caspar Hofmeister">
+  </figure>
+</header>
+
+<main class="page">
+
+  <section class="reveal" id="profil">
+    <div class="section-head">
+      <h2>Über mich</h2>
+      <span class="rule"></span>
+    </div>
+
+    <p class="lede">
+      Am meisten interessiert mich der Punkt, an dem Finanzen und Verhalten
+      aufeinandertreffen.
+    </p>
+
+    <div class="prose">
+      <p>
+        Im September 2026 habe ich mein Bachelorstudium an der Freien Universität Berlin
+        abgeschlossen, mit Schwerpunkt auf Controlling, Finance und Recht.
+      </p>
+      <p>
+        Zuletzt war ich bei Merck in Darmstadt im Bereich M&amp;A und Controlling tätig,
+        davor bei Ashoka Deutschland in Operations und Finance. Aufgewachsen bin ich
+        zwischen Bad Homburg, Toronto und Berlin, entsprechend arbeite ich in mehreren
+        Sprachen.
+      </p>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="section-head">
+      <h2>Bachelorarbeit</h2>
+      <span class="rule"></span>
+    </div>
+
+    <article class="thesis">
+      <h3>Warum sind Banken strukturell anfällig für Runs und wie können diese vermieden werden?</h3>
+      <p>
+        Freie Universität Berlin, Fachbereich Wirtschaftswissenschaft, betreut von
+        Univ.-Prof. Dr. Dr. Andreas Löffler und bewertet mit 1,0. Theoretische Grundlage
+        ist das Modell von Diamond und Dybvig aus dem Jahr 1983, das erklärt, warum die
+        Fristentransformation einer Bank zwei Gleichgewichte zulässt, ein stabiles und
+        einen selbsterfüllenden Run.
+      </p>
+      <p>
+        Darauf aufbauend untersuche ich zwei Fälle, den Repo-Run in der Finanzkrise 2008
+        und den Zusammenbruch der Silicon Valley Bank 2023. Im Zentrum steht die Frage, ab
+        welchem Anteil abziehender Einleger eine Bank kippt und welche Rolle der
+        Liquidationswert der Aktiva für diese Schwelle spielt.
+      </p>
+    </article>
+  </section>
+
+  <section class="reveal">
+    <div class="section-head">
+      <h2>Berufserfahrung</h2>
+      <span class="rule"></span>
+    </div>
+
+    <div class="ledger stagger">
+      <article class="entry">
+        <div class="when">2026</div>
+        <div class="what">
+          <h3>Merck KGaA</h3>
+          <div class="place">Darmstadt</div>
+          <p>Im Wesentlichen Tätigkeiten im Bereich M&amp;A und Controlling.</p>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="when">2025 bis 2026</div>
+        <div class="what">
+          <h3>Ashoka Deutschland gGmbH</h3>
+          <div class="place">Berlin und München</div>
+          <p>Im Wesentlichen Tätigkeiten im Bereich Operations und Finance.</p>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="when">2023 bis 2024</div>
+        <div class="what">
+          <h3>Praxis Dr. Leinhos</h3>
+          <div class="place">Berlin</div>
+          <p>Im Wesentlichen Empfangstätigkeiten.</p>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="when">2022 bis 2023</div>
+        <div class="what">
+          <h3>Herkert Catering</h3>
+          <div class="place">Frankfurt am Main</div>
+          <p>Im Wesentlichen Essensauslieferungen.</p>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="when">2021</div>
+        <div class="what">
+          <h3>Ventprom AG</h3>
+          <div class="place">Frankfurt am Main</div>
+          <p>Praktikum mit Büro- und administrativen Tätigkeiten.</p>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="when">2020</div>
+        <div class="what">
+          <h3>Vonovia</h3>
+          <div class="place">Bochum</div>
+          <p>Praktikum, einschließlich der Vorstellung einer eigenen Geschäftsidee zur Verbesserung des Images.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="section-head">
+      <h2>Ausbildung</h2>
+      <span class="rule"></span>
+    </div>
+
+    <div class="ledger stagger">
+      <article class="entry">
+        <div class="when">Okt. 2023 bis Sept. 2026</div>
+        <div class="what">
+          <h3>Freie Universität Berlin</h3>
+          <div class="place">Berlin, Deutschland</div>
+          <p>Bachelor of Science. Schwerpunkte Controlling, Finance und Recht.</p>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="when">Okt. 2020 bis Juli 2023</div>
+        <div class="what">
+          <h3>Europäische Schule Rhein-Main</h3>
+          <div class="place">Bad Vilbel, Deutschland</div>
+          <p>Baccalaureate (BAC).</p>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="when">Sept. 2019 bis Juli 2020</div>
+        <div class="what">
+          <h3>St. Andrews College</h3>
+          <div class="place">Toronto, Kanada</div>
+          <p>10. Klasse als Auslandsjahr.</p>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="when">Okt. 2014 bis Juni 2019</div>
+        <div class="what">
+          <h3>Humboldt Gymnasium</h3>
+          <div class="place">Bad Homburg, Deutschland</div>
+          <p>5. bis 9. Klasse.</p>
+        </div>
+      </article>
+
+      <article class="entry">
+        <div class="when">Okt. 2010 bis Juli 2014</div>
+        <div class="what">
+          <h3>Landgraf-Ludwig-Schule</h3>
+          <div class="place">Bad Homburg, Deutschland</div>
+          <p>Grundschulabschluss.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="section-head">
+      <h2>Auszeichnungen</h2>
+      <span class="rule"></span>
+    </div>
+
+    <div class="awards stagger">
+      <div class="award">
+        <div class="title">Bachelorarbeit zum Thema Bank Runs, bewertet mit 1,0</div>
+        <div class="issuer">Freie Universität Berlin</div>
+      </div>
+      <div class="award">
+        <div class="title">Bestes Video im Fach Marketing</div>
+        <div class="issuer">Freie Universität Berlin</div>
+      </div>
+      <div class="award">
+        <div class="title">Most Improved Player im Varsity Fußballteam</div>
+        <div class="issuer">St. Andrews College, Toronto</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="section-head">
+      <h2>Sprachen</h2>
+      <span class="rule"></span>
+    </div>
+
+    <div class="langs">
+      <div class="lang">
+        <div class="tongue">Deutsch</div>
+        <div class="level">Muttersprache</div>
+        <div class="meter" role="img" aria-label="Muttersprache">
+          <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i>
+        </div>
+      </div>
+      <div class="lang">
+        <div class="tongue">Englisch</div>
+        <div class="level">Fließend in Wort und Schrift</div>
+        <div class="meter" role="img" aria-label="Fließend in Wort und Schrift">
+          <i class="on"></i><i class="on"></i><i class="on"></i><i></i>
+        </div>
+      </div>
+      <div class="lang">
+        <div class="tongue">Französisch</div>
+        <div class="level">Sehr gute Kenntnisse</div>
+        <div class="meter" role="img" aria-label="Sehr gute Kenntnisse">
+          <i class="on"></i><i class="on"></i><i></i><i></i>
+        </div>
+      </div>
+      <div class="lang">
+        <div class="tongue">Russisch</div>
+        <div class="level">Grundkenntnisse</div>
+        <div class="meter" role="img" aria-label="Grundkenntnisse">
+          <i class="on"></i><i></i><i></i><i></i>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="section-head">
+      <h2>Abseits des Schreibtischs</h2>
+      <span class="rule"></span>
+    </div>
+
+    <div class="split">
+      <figure class="frame" id="frameB">
+        <img src="@@PORTRAIT_B@@" alt="Jan Caspar Hofmeister">
+      </figure>
+
+      <div class="prose">
+        <p>
+          Mit fünfzehn bin ich für ein Jahr allein nach Kanada gegangen und habe dort am
+          St. Andrews College in Toronto gelebt. Diese Zeit hat mich als Mensch am stärksten
+          weitergebracht. Sie hat mich selbstständiger gemacht und mir viel darüber
+          beigebracht, wie man in einer fremden Umgebung zurechtkommt.
+        </p>
+        <p>
+          Fußball begleitet mich, seit ich denken kann. Von 2016 bis 2019 habe ich im
+          Nachwuchsleistungszentrum des FSV Frankfurt gespielt, in Toronto stand ich im
+          Varsity Team des St. Andrews College.
+        </p>
+        <p>
+          Daneben reise ich viel und am liebsten dorthin, wo ich noch nie war.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal contact">
+    <div class="section-head" style="justify-content:center">
+      <h2>Kontakt</h2>
+    </div>
+    <div class="prose">
+      <p>Für Anfragen, Praktika oder einfach ein Gespräch erreichen Sie mich hier.</p>
+    </div>
+    <a class="mail" id="mail" href="#kontakt"
+       data-u="jancaspar.hofmeister" data-d="gmail.com">jancaspar.hofmeister (at) gmail.com</a>
+  </section>
+
+  <footer>
+    <span>Jan Caspar Hofmeister</span>
+    <span>Berlin</span>
+  </footer>
+
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var fine    = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  /* Schein und leichte Parallaxe am Mauszeiger */
+  (function pointer() {
+    if (!fine || reduced) return;
+
+    var glow = document.getElementById("glow");
+    var heroImg = document.querySelector(".hero-figure img");
+    var frameImg = document.querySelector("#frameB img");
+    var mail = document.getElementById("mail");
+
+    var px = window.innerWidth / 2, py = window.innerHeight * 0.3;
+    var cx = px, cy = py;
+    var queued = false;
+
+    window.addEventListener("pointermove", function (e) {
+      px = e.clientX;
+      py = e.clientY;
+      if (glow && !glow.classList.contains("on")) glow.classList.add("on");
+      if (!queued) { queued = true; requestAnimationFrame(step); }
+    }, { passive: true });
+
+    function step() {
+      queued = false;
+      cx += (px - cx) * 0.12;
+      cy += (py - cy) * 0.12;
+
+      document.documentElement.style.setProperty("--mx", cx + "px");
+      document.documentElement.style.setProperty("--my", cy + "px");
+
+      var nx = (cx / window.innerWidth) - 0.5;
+      var ny = (cy / window.innerHeight) - 0.5;
+
+      if (heroImg && !heroImg.parentNode.matches(":hover")) {
+        heroImg.style.transform = "scale(1.06) translate3d(" + (nx * -12) + "px," + (ny * -9) + "px,0)";
+      }
+      if (frameImg && !frameImg.parentNode.matches(":hover")) {
+        frameImg.style.transform = "scale(1.06) translate3d(" + (nx * -10) + "px," + (ny * -8) + "px,0)";
+      }
+
+      if (Math.abs(px - cx) > 0.4 || Math.abs(py - cy) > 0.4) {
+        queued = true;
+        requestAnimationFrame(step);
+      }
+    }
+
+    if (mail) {
+      mail.addEventListener("pointermove", function (e) {
+        var r = mail.getBoundingClientRect();
+        var dx = (e.clientX - (r.left + r.width / 2)) / r.width;
+        var dy = (e.clientY - (r.top + r.height / 2)) / r.height;
+        mail.style.transform = "translate(" + (dx * 12) + "px," + (dy * 8) + "px)";
+      });
+      mail.addEventListener("pointerleave", function () {
+        mail.style.transform = "";
+      });
+    }
+  })();
+
+  /* Adresse erst hier zusammensetzen, damit sie nicht im Quelltext steht */
+  (function mailto() {
+    var el = document.getElementById("mail");
+    if (!el) return;
+    var adresse = el.getAttribute("data-u") + String.fromCharCode(64) + el.getAttribute("data-d");
+    el.textContent = adresse;
+    el.setAttribute("href", "mailto:" + adresse);
+  })();
+
+  /* Einblenden beim Scrollen */
+  (function scrollReveal() {
+    var items = document.querySelectorAll(".reveal");
+    if (reduced || !("IntersectionObserver" in window)) {
+      items.forEach(function (el) { el.classList.add("in"); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+      });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+    items.forEach(function (el) { io.observe(el); });
+  })();
+})();
+</script>
