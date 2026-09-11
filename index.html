@@ -256,7 +256,7 @@
   }
   .btn:hover::before { transform: none; }
   .btn svg { transition: transform .3s var(--ease); }
-  .btn:hover svg { transform: translateX(3px); }
+  .btn:hover svg { transform: translateY(-2px); }
 
   .cue {
     display: inline-flex;
@@ -663,10 +663,12 @@
       Finance und Recht.
     </p>
     <div class="actions">
-      <a class="btn" href="#kontakt">
+      <a class="btn" href="#kontakt" data-u="jancaspar.hofmeister" data-d="gmail.com">
         Kontakt aufnehmen
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-          <path d="M1 7h12M8.5 2.5 13 7l-4.5 4.5" stroke="currentColor" stroke-width="1.5"
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <rect x="1.6" y="3.4" width="12.8" height="9.2" rx="1.2"
+                stroke="currentColor" stroke-width="1.4"/>
+          <path d="m2.3 4.6 5.7 4 5.7-4" stroke="currentColor" stroke-width="1.4"
                 stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </a>
@@ -951,7 +953,7 @@
       <p>Für Anfragen, Praktika oder einfach ein Gespräch erreichen Sie mich hier.</p>
     </div>
     <a class="mail" id="mail" href="#kontakt"
-       data-u="jancaspar.hofmeister" data-d="gmail.com">jancaspar.hofmeister (at) gmail.com</a>
+       data-u="jancaspar.hofmeister" data-d="gmail.com" data-show>jancaspar.hofmeister (at) gmail.com</a>
   </section>
 
   <footer>
@@ -968,13 +970,14 @@
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var fine    = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
-  /* Adresse erst hier zusammensetzen, damit sie nicht im Quelltext steht */
+  /* Adresse erst hier zusammensetzen, damit sie nicht im Quelltext steht.
+     Ohne JavaScript fuehren beide Links zum Kontaktabschnitt. */
   (function mailto() {
-    var el = document.getElementById("mail");
-    if (!el) return;
-    var adresse = el.getAttribute("data-u") + String.fromCharCode(64) + el.getAttribute("data-d");
-    el.textContent = adresse;
-    el.setAttribute("href", "mailto:" + adresse);
+    document.querySelectorAll("[data-u][data-d]").forEach(function (el) {
+      var adresse = el.getAttribute("data-u") + String.fromCharCode(64) + el.getAttribute("data-d");
+      el.setAttribute("href", "mailto:" + adresse);
+      if (el.hasAttribute("data-show")) el.textContent = adresse;
+    });
   })();
 
   /* Kopfleiste bekommt beim Scrollen einen Grund */
