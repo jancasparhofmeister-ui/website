@@ -6,31 +6,38 @@
 <style>
   /* ============================================================
      Jan Caspar Hofmeister
-     Helle, ruhige Seite. Eine Schrift, ein Akzent, viel Weissraum.
-     Alle Farben sind explizit gesetzt.
+     Helle Seite, eine Schrift, ein Akzent in Bordeaux.
+
+     Farbe wechseln: nur die drei Werte unter AKZENT tauschen.
+       Bordeaux      #7B1E2B / #9A2A39 / 123, 30, 43
+       Dunkles Braun #4E3226 / #6B4635 / 78, 50, 38
+       Grasgruen     #2F5D3A / #3F7A4C / 47, 93, 58
      ============================================================ */
 
   :root {
     color-scheme: light;
 
-    --bg:      #FBFBFA;
+    /* AKZENT */
+    --accent:      #7B1E2B;
+    --accent-hell: #9A2A39;
+    --accent-rgb:  123, 30, 43;
+
+    --bg:      #FCFCFB;
     --surface: #FFFFFF;
-    --raised:  #F4F5F5;
+    --raised:  #F5F3F3;
 
-    --ink:     #15181B;
-    --muted:   #59636A;
-    --faint:   #8C959B;
+    --ink:     #17161A;
+    --muted:   #5F585B;
+    --faint:   #938B8E;
 
-    --line:    #E5E7E7;
-    --line-2:  #D2D6D7;
-
-    --accent:  #1F5C6B;
-    --accent-soft: rgba(31, 92, 107, .07);
+    --line:    #E7E3E3;
+    --line-2:  #D6D0D1;
 
     --font: "Instrument Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
 
     --measure: 60ch;
     --page: 68rem;
+    --nav: 4.25rem;
 
     --mx: 50%;
     --my: 30%;
@@ -38,6 +45,11 @@
   }
 
   * { box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--nav) + 1.5rem);
+  }
 
   body {
     margin: 0;
@@ -50,14 +62,11 @@
     overflow-x: hidden;
   }
 
-  ::selection { background: rgba(31, 92, 107, .16); }
+  ::selection { background: rgba(var(--accent-rgb), .15); }
 
   h1, h2, h3 { font-weight: 600; letter-spacing: -.018em; }
 
-  a {
-    color: var(--ink);
-    text-decoration: none;
-  }
+  a { color: var(--ink); text-decoration: none; }
   a:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 4px;
@@ -71,9 +80,9 @@
     z-index: 0;
     pointer-events: none;
     background: radial-gradient(
-      36rem 36rem at var(--mx) var(--my),
-      rgba(31, 92, 107, .055),
-      rgba(31, 92, 107, .018) 40%,
+      34rem 34rem at var(--mx) var(--my),
+      rgba(var(--accent-rgb), .05),
+      rgba(var(--accent-rgb), .016) 42%,
       transparent 70%
     );
     opacity: 0;
@@ -81,13 +90,86 @@
   }
   .glow.on { opacity: 1; }
 
-  .page {
-    position: relative;
-    z-index: 1;
+  /* ============================================================
+     Kopfleiste
+     ============================================================ */
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    height: var(--nav);
+    display: flex;
+    align-items: center;
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    transition: background .35s ease, border-color .35s ease, backdrop-filter .35s ease;
+  }
+  .topbar.stuck {
+    background: rgba(252, 252, 251, .82);
+    -webkit-backdrop-filter: saturate(1.6) blur(12px);
+    backdrop-filter: saturate(1.6) blur(12px);
+    border-bottom-color: var(--line);
+  }
+
+  .topbar-inner {
+    width: 100%;
     max-width: var(--page);
     margin: 0 auto;
     padding: 0 clamp(1.25rem, 5vw, 4rem);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
   }
+
+  .logo {
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: -.04em;
+    line-height: 1;
+    display: inline-flex;
+    align-items: baseline;
+    padding: .35rem 0;
+  }
+  .logo .dot {
+    color: var(--accent);
+    display: inline-block;
+    transition: transform .35s var(--ease);
+  }
+  .logo:hover .dot { transform: translateY(-.18em); }
+
+  .menu {
+    display: flex;
+    align-items: center;
+    gap: clamp(.9rem, 2.4vw, 1.9rem);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .menu::-webkit-scrollbar { display: none; }
+
+  .menu a {
+    position: relative;
+    font-size: .9rem;
+    color: var(--muted);
+    white-space: nowrap;
+    padding: .4rem 0;
+    transition: color .25s ease;
+  }
+  .menu a::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: .1rem;
+    height: 1.5px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    transition: transform .35s var(--ease);
+  }
+  .menu a:hover { color: var(--ink); }
+  .menu a:hover::after,
+  .menu a.active::after { transform: scaleX(1); }
+  .menu a.active { color: var(--accent); }
 
   /* ============================================================
      Kopf
@@ -98,12 +180,12 @@
     z-index: 1;
     max-width: var(--page);
     margin: 0 auto;
-    padding: clamp(3.5rem, 10vh, 7rem) clamp(1.25rem, 5vw, 4rem) clamp(3.5rem, 9vh, 6rem);
+    padding: clamp(2.5rem, 7vh, 5rem) clamp(1.25rem, 5vw, 4rem) clamp(3.5rem, 9vh, 6rem);
     display: grid;
     grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
     gap: clamp(2rem, 6vw, 5rem);
     align-items: center;
-    min-height: 82svh;
+    min-height: calc(88svh - var(--nav));
   }
 
   .hero-text { max-width: 30ch; }
@@ -130,25 +212,59 @@
     animation: rise 1s var(--ease) .28s forwards;
   }
 
-  .cue {
-    display: inline-flex;
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: .6rem;
-    margin-top: 2.4rem;
-    font-size: .92rem;
-    color: var(--muted);
+    gap: 1.75rem;
+    margin-top: 2.3rem;
     opacity: 0;
     transform: translateY(14px);
     animation: rise 1s var(--ease) .44s forwards;
+  }
+
+  .btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    padding: .72rem 1.35rem;
+    font-size: .93rem;
+    font-weight: 500;
+    color: var(--surface);
+    background: var(--accent);
+    overflow: hidden;
+    isolation: isolate;
+    transition: transform .3s var(--ease);
+    will-change: transform;
+  }
+  .btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--accent-hell);
+    transform: translateY(101%);
+    transition: transform .4s var(--ease);
+  }
+  .btn:hover::before { transform: none; }
+  .btn svg { transition: transform .3s var(--ease); }
+  .btn:hover svg { transform: translateX(3px); }
+
+  .cue {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    font-size: .93rem;
+    color: var(--muted);
     transition: color .25s ease;
   }
   .cue svg { transition: transform .3s var(--ease); }
   .cue:hover { color: var(--accent); }
   .cue:hover svg { transform: translateY(3px); }
 
-  @keyframes rise {
-    to { opacity: 1; transform: none; }
-  }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+  @keyframes fade { to { opacity: 1; } }
 
   .hero-figure {
     margin: 0;
@@ -156,27 +272,46 @@
     overflow: hidden;
     background: var(--raised);
     aspect-ratio: 4 / 5;
-    max-height: 34rem;
+    max-height: 33rem;
     justify-self: end;
     width: 100%;
     opacity: 0;
-    animation: rise 1.2s var(--ease) .2s forwards;
+    animation: fade 1.2s var(--ease) .2s forwards;
+    transition: transform .5s var(--ease), box-shadow .5s ease;
+    will-change: transform;
   }
-  .hero-figure img {
+  .hero-figure::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(210deg, rgba(var(--accent-rgb), .16), transparent 58%);
+    opacity: 0;
+    transition: opacity .6s ease;
+    pointer-events: none;
+  }
+  .hero-figure:hover::after { opacity: 1; }
+  .hero-figure img,
+  .frame img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 50% 16%;
     display: block;
     transform: scale(1.06);
-    transition: transform 1.4s var(--ease);
     will-change: transform;
   }
-  .hero-figure:hover img { transform: scale(1.1); }
+  .hero-figure img { object-position: 50% 16%; }
 
   /* ============================================================
      Abschnitte
      ============================================================ */
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: var(--page);
+    margin: 0 auto;
+    padding: 0 clamp(1.25rem, 5vw, 4rem);
+  }
 
   section {
     padding: clamp(3.25rem, 9vh, 5.5rem) 0;
@@ -220,6 +355,8 @@
     color: var(--ink);
     letter-spacing: -.012em;
     margin: 0 0 1.8rem;
+    padding-left: 1.1rem;
+    border-left: 2px solid var(--accent);
   }
 
   /* ---------- Zeitleiste ---------- */
@@ -247,7 +384,7 @@
     transform-origin: 50% 0;
     transition: transform .4s var(--ease);
   }
-  .entry:hover { background: var(--accent-soft); }
+  .entry:hover { background: rgba(var(--accent-rgb), .04); }
   .entry:hover::before { transform: scaleY(1); }
 
   .entry .when {
@@ -260,16 +397,8 @@
   }
   .entry:hover .when { color: var(--accent); }
   .entry .what { min-width: 0; }
-  .entry h3 {
-    margin: 0;
-    font-size: 1.06rem;
-    font-weight: 600;
-  }
-  .entry .place {
-    color: var(--muted);
-    font-size: .94rem;
-    margin-top: .1rem;
-  }
+  .entry h3 { margin: 0; font-size: 1.06rem; font-weight: 600; }
+  .entry .place { color: var(--muted); font-size: .94rem; margin-top: .1rem; }
   .entry p {
     margin: .5rem 0 0;
     color: var(--muted);
@@ -280,12 +409,30 @@
   /* ---------- Bachelorarbeit ---------- */
 
   .thesis {
+    position: relative;
     background: var(--surface);
     border: 1px solid var(--line);
     padding: clamp(1.6rem, 4vw, 2.75rem);
     display: grid;
     gap: 1.3rem;
+    overflow: hidden;
+    isolation: isolate;
   }
+  /* Lichtfleck wandert mit dem Zeiger ueber die Karte */
+  .thesis::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(
+      18rem 18rem at var(--cx, 50%) var(--cy, 50%),
+      rgba(var(--accent-rgb), .07),
+      transparent 65%
+    );
+    opacity: 0;
+    transition: opacity .5s ease;
+  }
+  .thesis:hover::before { opacity: 1; }
   .thesis h3 {
     font-size: clamp(1.2rem, 2.8vw, 1.6rem);
     line-height: 1.32;
@@ -361,19 +508,21 @@
     overflow: hidden;
     background: var(--raised);
     aspect-ratio: 4 / 5;
-    max-height: 30rem;
-  }
-  .frame img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: 50% 14%;
-    display: block;
-    transform: scale(1.06);
-    transition: transform 1.4s var(--ease);
+    max-height: 29rem;
+    transition: transform .5s var(--ease);
     will-change: transform;
   }
-  .frame:hover img { transform: scale(1.1); }
+  .frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(210deg, rgba(var(--accent-rgb), .16), transparent 58%);
+    opacity: 0;
+    transition: opacity .6s ease;
+    pointer-events: none;
+  }
+  .frame:hover::after { opacity: 1; }
+  .frame img { object-position: 50% 14%; }
 
   /* ---------- Kontakt ---------- */
 
@@ -401,11 +550,14 @@
     padding: 1.6rem 0 3rem;
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     justify-content: space-between;
     gap: .5rem 2rem;
     font-size: .88rem;
     color: var(--faint);
   }
+  footer a { color: var(--faint); transition: color .25s ease; }
+  footer a:hover { color: var(--accent); }
 
   /* ---------- Einblenden ---------- */
 
@@ -440,12 +592,16 @@
     .hero-figure {
       order: -1;
       justify-self: start;
-      max-width: 20rem;
+      max-width: 19rem;
       aspect-ratio: 1 / 1;
     }
     .hero-text { max-width: none; }
     .split { grid-template-columns: 1fr; }
-    .frame { max-width: 22rem; aspect-ratio: 1 / 1; }
+    .frame { max-width: 21rem; aspect-ratio: 1 / 1; }
+  }
+
+  @media (max-width: 48rem) {
+    .menu a[data-optional] { display: none; }
   }
 
   @media (max-width: 44rem) {
@@ -462,8 +618,9 @@
   /* ---------- weniger Bewegung ---------- */
 
   @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
     .reveal, .stagger > * { opacity: 1 !important; transform: none !important; transition: none !important; }
-    .name, .tagline, .cue, .hero-figure { opacity: 1 !important; animation: none !important; transform: none !important; }
+    .name, .tagline, .actions, .hero-figure { opacity: 1 !important; animation: none !important; transform: none !important; }
     .meter i, .section-head .rule { transform: none !important; }
     .glow { display: none; }
     * { transition-duration: .01ms !important; }
@@ -476,6 +633,19 @@
 
 <div class="glow" id="glow" aria-hidden="true"></div>
 
+<div class="topbar" id="topbar">
+  <div class="topbar-inner">
+    <a class="logo" href="#top" aria-label="Zum Seitenanfang">JH<span class="dot">.</span></a>
+    <nav class="menu" id="menu" aria-label="Seitenbereiche">
+      <a href="#profil">Über mich</a>
+      <a href="#arbeit">Bachelorarbeit</a>
+      <a href="#werdegang">Werdegang</a>
+      <a href="#sprachen" data-optional>Sprachen</a>
+      <a href="#kontakt">Kontakt</a>
+    </nav>
+  </div>
+</div>
+
 <header class="hero" id="top">
   <div class="hero-text">
     <h1 class="name"><span>Jan Caspar</span><span>Hofmeister</span></h1>
@@ -483,16 +653,25 @@
       Wirtschaftswissenschaftler aus Berlin, mit Schwerpunkt auf Controlling,
       Finance und Recht.
     </p>
-    <a class="cue" href="#profil">
-      Mehr über mich
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-        <path d="M7 1v12M2.5 8.5 7 13l4.5-4.5" stroke="currentColor" stroke-width="1.4"
-              stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </a>
+    <div class="actions">
+      <a class="btn" href="#kontakt">
+        Kontakt aufnehmen
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M1 7h12M8.5 2.5 13 7l-4.5 4.5" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <a class="cue" href="#profil">
+        Mehr über mich
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M7 1v12M2.5 8.5 7 13l4.5-4.5" stroke="currentColor" stroke-width="1.4"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
   </div>
 
-  <figure class="hero-figure">
+  <figure class="hero-figure tilt">
     <img src="@@PORTRAIT_A@@" alt="Porträt von Jan Caspar Hofmeister">
   </figure>
 </header>
@@ -524,13 +703,13 @@
     </div>
   </section>
 
-  <section class="reveal">
+  <section class="reveal" id="arbeit">
     <div class="section-head">
       <h2>Bachelorarbeit</h2>
       <span class="rule"></span>
     </div>
 
-    <article class="thesis">
+    <article class="thesis" id="thesis">
       <h3>Warum sind Banken strukturell anfällig für Runs und wie können diese vermieden werden?</h3>
       <p>
         Freie Universität Berlin, Fachbereich Wirtschaftswissenschaft, betreut von
@@ -548,7 +727,7 @@
     </article>
   </section>
 
-  <section class="reveal">
+  <section class="reveal" id="werdegang">
     <div class="section-head">
       <h2>Berufserfahrung</h2>
       <span class="rule"></span>
@@ -687,7 +866,7 @@
     </div>
   </section>
 
-  <section class="reveal">
+  <section class="reveal" id="sprachen">
     <div class="section-head">
       <h2>Sprachen</h2>
       <span class="rule"></span>
@@ -732,7 +911,7 @@
     </div>
 
     <div class="split">
-      <figure class="frame" id="frameB">
+      <figure class="frame tilt" id="frameB">
         <img src="@@PORTRAIT_B@@" alt="Jan Caspar Hofmeister">
       </figure>
 
@@ -755,7 +934,7 @@
     </div>
   </section>
 
-  <section class="reveal contact">
+  <section class="reveal contact" id="kontakt">
     <div class="section-head" style="justify-content:center">
       <h2>Kontakt</h2>
     </div>
@@ -768,7 +947,7 @@
 
   <footer>
     <span>Jan Caspar Hofmeister</span>
-    <span>Berlin</span>
+    <a href="#top">Nach oben</a>
   </footer>
 
 </main>
@@ -780,14 +959,63 @@
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var fine    = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
-  /* Schein und leichte Parallaxe am Mauszeiger */
+  /* Adresse erst hier zusammensetzen, damit sie nicht im Quelltext steht */
+  (function mailto() {
+    var el = document.getElementById("mail");
+    if (!el) return;
+    var adresse = el.getAttribute("data-u") + String.fromCharCode(64) + el.getAttribute("data-d");
+    el.textContent = adresse;
+    el.setAttribute("href", "mailto:" + adresse);
+  })();
+
+  /* Kopfleiste bekommt beim Scrollen einen Grund */
+  (function topbar() {
+    var bar = document.getElementById("topbar");
+    if (!bar) return;
+    var queued = false;
+    function check() {
+      queued = false;
+      bar.classList.toggle("stuck", window.scrollY > 24);
+    }
+    window.addEventListener("scroll", function () {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(check);
+    }, { passive: true });
+    check();
+  })();
+
+  /* Aktiven Menuepunkt mitfuehren */
+  (function menuState() {
+    var links = Array.prototype.slice.call(document.querySelectorAll("#menu a"));
+    if (!links.length || !("IntersectionObserver" in window)) return;
+
+    var paare = links.map(function (a) {
+      return { a: a, ziel: document.querySelector(a.getAttribute("href")) };
+    }).filter(function (p) { return p.ziel; });
+
+    var sichtbar = new Set();
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) sichtbar.add(en.target); else sichtbar.delete(en.target);
+      });
+      var treffer = null;
+      paare.forEach(function (p) { if (sichtbar.has(p.ziel)) treffer = treffer || p; });
+      paare.forEach(function (p) { p.a.classList.toggle("active", p === treffer); });
+    }, { rootMargin: "-30% 0px -55% 0px", threshold: 0 });
+
+    paare.forEach(function (p) { io.observe(p.ziel); });
+  })();
+
+  /* Schein, Parallaxe, Neigung und magnetischer Kontaktlink */
   (function pointer() {
     if (!fine || reduced) return;
 
     var glow = document.getElementById("glow");
-    var heroImg = document.querySelector(".hero-figure img");
-    var frameImg = document.querySelector("#frameB img");
+    var bilder = Array.prototype.slice.call(document.querySelectorAll(".hero-figure img, .frame img"));
     var mail = document.getElementById("mail");
+    var btn = document.querySelector(".btn");
+    var thesis = document.getElementById("thesis");
 
     var px = window.innerWidth / 2, py = window.innerHeight * 0.3;
     var cx = px, cy = py;
@@ -811,12 +1039,10 @@
       var nx = (cx / window.innerWidth) - 0.5;
       var ny = (cy / window.innerHeight) - 0.5;
 
-      if (heroImg && !heroImg.parentNode.matches(":hover")) {
-        heroImg.style.transform = "scale(1.06) translate3d(" + (nx * -12) + "px," + (ny * -9) + "px,0)";
-      }
-      if (frameImg && !frameImg.parentNode.matches(":hover")) {
-        frameImg.style.transform = "scale(1.06) translate3d(" + (nx * -10) + "px," + (ny * -8) + "px,0)";
-      }
+      bilder.forEach(function (img) {
+        img.style.transform =
+          "scale(1.06) translate3d(" + (nx * -11) + "px," + (ny * -8) + "px,0)";
+      });
 
       if (Math.abs(px - cx) > 0.4 || Math.abs(py - cy) > 0.4) {
         queued = true;
@@ -824,26 +1050,45 @@
       }
     }
 
-    if (mail) {
-      mail.addEventListener("pointermove", function (e) {
-        var r = mail.getBoundingClientRect();
-        var dx = (e.clientX - (r.left + r.width / 2)) / r.width;
-        var dy = (e.clientY - (r.top + r.height / 2)) / r.height;
-        mail.style.transform = "translate(" + (dx * 12) + "px," + (dy * 8) + "px)";
+    /* Bilder neigen sich leicht zum Zeiger */
+    document.querySelectorAll(".tilt").forEach(function (el) {
+      el.addEventListener("pointerenter", function () {
+        el.style.transition = "transform .18s ease-out";
       });
-      mail.addEventListener("pointerleave", function () {
-        mail.style.transform = "";
+      el.addEventListener("pointermove", function (e) {
+        var r = el.getBoundingClientRect();
+        var dx = (e.clientX - r.left) / r.width - 0.5;
+        var dy = (e.clientY - r.top) / r.height - 0.5;
+        el.style.transform =
+          "perspective(900px) rotateY(" + (dx * 4.5) + "deg) rotateX(" + (dy * -4.5) + "deg)";
+      });
+      el.addEventListener("pointerleave", function () {
+        el.style.transition = "";
+        el.style.transform = "";
+      });
+    });
+
+    /* Lichtfleck auf der Karte der Bachelorarbeit */
+    if (thesis) {
+      thesis.addEventListener("pointermove", function (e) {
+        var r = thesis.getBoundingClientRect();
+        thesis.style.setProperty("--cx", (e.clientX - r.left) + "px");
+        thesis.style.setProperty("--cy", (e.clientY - r.top) + "px");
       });
     }
-  })();
 
-  /* Adresse erst hier zusammensetzen, damit sie nicht im Quelltext steht */
-  (function mailto() {
-    var el = document.getElementById("mail");
-    if (!el) return;
-    var adresse = el.getAttribute("data-u") + String.fromCharCode(64) + el.getAttribute("data-d");
-    el.textContent = adresse;
-    el.setAttribute("href", "mailto:" + adresse);
+    /* Knopf und Kontaktlink kommen dem Zeiger entgegen */
+    [btn, mail].forEach(function (el) {
+      if (!el) return;
+      var staerke = el === mail ? 12 : 6;
+      el.addEventListener("pointermove", function (e) {
+        var r = el.getBoundingClientRect();
+        var dx = (e.clientX - (r.left + r.width / 2)) / r.width;
+        var dy = (e.clientY - (r.top + r.height / 2)) / r.height;
+        el.style.transform = "translate(" + (dx * staerke) + "px," + (dy * staerke * 0.7) + "px)";
+      });
+      el.addEventListener("pointerleave", function () { el.style.transform = ""; });
+    });
   })();
 
   /* Einblenden beim Scrollen */
