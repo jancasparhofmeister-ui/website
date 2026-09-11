@@ -545,6 +545,40 @@
   }
   .mail:hover { color: var(--accent); background-size: 100% 1.5px; }
 
+  .contact-extra {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: .75rem 1.1rem;
+    margin-top: 2.1rem;
+  }
+  .copy {
+    font-family: inherit;
+    font-size: .88rem;
+    color: var(--muted);
+    background: transparent;
+    border: 1px solid var(--line-2);
+    padding: .5rem 1rem;
+    cursor: pointer;
+    transition: color .25s ease, border-color .25s ease, background .25s ease;
+  }
+  .copy:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: rgba(var(--accent-rgb), .04);
+  }
+  .copy:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+  .copy.done {
+    color: var(--surface);
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .contact-extra .hint { font-size: .85rem; color: var(--faint); }
+
   footer {
     border-top: 1px solid var(--line);
     padding: 1.6rem 0 3rem;
@@ -945,6 +979,10 @@
     </div>
     <a class="mail" id="mail" href="#kontakt"
        data-u="jancaspar.hofmeister" data-d="gmail.com" data-show>jancaspar.hofmeister (at) gmail.com</a>
+    <div class="contact-extra">
+      <button class="copy" id="copy" type="button">Adresse kopieren</button>
+      <span class="hint">Falls sich kein Mailprogramm öffnet</span>
+    </div>
   </section>
 
   <footer>
@@ -968,6 +1006,52 @@
       var adresse = el.getAttribute("data-u") + String.fromCharCode(64) + el.getAttribute("data-d");
       el.setAttribute("href", "mailto:" + adresse);
       if (el.hasAttribute("data-show")) el.textContent = adresse;
+    });
+  })();
+
+  /* Adresse in die Zwischenablage, falls kein Mailprogramm eingerichtet ist */
+  (function kopieren() {
+    var knopf = document.getElementById("copy");
+    var link = document.getElementById("mail");
+    if (!knopf || !link) return;
+
+    var beschriftung = knopf.textContent;
+
+    knopf.addEventListener("click", function () {
+      var adresse = (link.getAttribute("href") || "").replace("mailto:", "");
+      if (!adresse || adresse.charAt(0) === "#") {
+        adresse = link.getAttribute("data-u") + String.fromCharCode(64) + link.getAttribute("data-d");
+      }
+
+      function geschafft() {
+        knopf.textContent = "Adresse kopiert";
+        knopf.classList.add("done");
+        setTimeout(function () {
+          knopf.textContent = beschriftung;
+          knopf.classList.remove("done");
+        }, 2200);
+      }
+
+      function ersatzweg() {
+        var feld = document.createElement("textarea");
+        feld.value = adresse;
+        feld.setAttribute("readonly", "");
+        feld.style.position = "fixed";
+        feld.style.top = "0";
+        feld.style.opacity = "0";
+        document.body.appendChild(feld);
+        feld.select();
+        var erfolg = false;
+        try { erfolg = document.execCommand("copy"); } catch (e) { erfolg = false; }
+        document.body.removeChild(feld);
+        if (erfolg) geschafft(); else knopf.textContent = adresse;
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(adresse).then(geschafft, ersatzweg);
+      } else {
+        ersatzweg();
+      }
     });
   })();
 
